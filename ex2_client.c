@@ -21,11 +21,13 @@ void handler(int sig){
     while(read(fd,buff,1) > 0 ){
         printf("%c",buff[0]);
     }
+    printf("\n");
     close(fd);
     remove(to_client);
 }
 
 int main(int argc, char *argv[]){
+    
 
     if(argc != 5){
         errHandler(-1);
@@ -62,6 +64,13 @@ int main(int argc, char *argv[]){
             fprintf(fd, "%d %d %d %d", getpid() , P2, P3, P4);
             fclose(fd);
             kill(P1, SIGUSR1); //Sending signal to the PID = P1
+            int P1;
+            FILE* fd2 = fopen("to_srv", "r");
+            int err = fscanf(fd, "%d", &P1);
+            // printf("%d %d\n", P1, getpid());
+            if (P1 != getpid()){
+                continue;
+            }
             pause();
             exit(0);
         }
